@@ -11,6 +11,4 @@ x:foreach("firewall","rule",function(s)
     end
 end)
 
-if commit then
-    x:commit("firewall")
-end
+if commit then x:commit("firewall") end

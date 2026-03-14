@@ -1,11 +1,19 @@
 #!/bin/sh /etc/rc.common
-
-START=99
+START=70
+STOP=15
+PROG=/usr/sbin/inetacd.lua
+SERVICE_DAEMONIZE=1
 
 start() {
-    /usr/sbin/inetacd.lua &
+    service_start $PROG
 }
 
 stop() {
-    killall inetacd.lua
+    NAME=${PROG##*/}
+    set -- `pidof $NAME`
+    PID=$1
+    [ -z "$PID" ] && return
+    PGID=`< /proc/$PID/stat sed -n '$s/.*) [^ ]* [^ ]* \([^ ]*\).*/\1/p'`
+    [ -z "$PGID" ] && return
+    kill -KILL -$PGID
 }
